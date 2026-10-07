@@ -1,0 +1,263 @@
+/* ============================================================
+   潮汐データ確認アプリ - スタイルシート
+   ============================================================ */
+
+/* ── リセット & 基本設定 ───────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --clr-primary:    #1a4a7a;
+  --clr-primary-lt: #2567a8;
+  --clr-accent:     #0c8ea0;
+  --clr-bg:         #f0f4f8;
+  --clr-card:       #ffffff;
+  --clr-border:     #d0dbe8;
+  --clr-text:       #2c3e50;
+  --clr-text-sub:   #6b7f93;
+  --clr-selected:   #fff8c5;
+  --clr-selected-b: #f5d800;
+  --clr-high:       #e74c3c;
+  --clr-low:        #27ae60;
+  --radius:         8px;
+  --shadow:         0 2px 8px rgba(0,0,0,0.10);
+  --font-jp:        "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+                    "Hiragino Sans", Meiryo, sans-serif;
+}
+
+html { font-size: 15px; }
+
+body {
+  font-family: var(--font-jp);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── ヘッダー ───────────────────────────────────────────── */
+.app-header {
+  background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-lt) 100%);
+  color: #fff;
+  padding: 16px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.app-title    { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.04em; }
+.app-subtitle { font-size: 0.82rem; opacity: 0.80; margin-top: 2px; }
+
+/* ── メイン ─────────────────────────────────────────────── */
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+}
+
+/* ── 操作パネル ─────────────────────────────────────────── */
+.controls-panel {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 18px 24px 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.controls-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-label {
+  font-size: 0.80rem;
+  font-weight: 600;
+  color: var(--clr-text-sub);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.control-input {
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--clr-border);
+  border-radius: 5px;
+  font-size: 0.95rem;
+  font-family: var(--font-jp);
+  color: var(--clr-text);
+  background: #fff;
+  transition: border-color 0.2s;
+}
+.control-input:focus {
+  outline: none;
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px rgba(12,142,160,0.15);
+}
+select.control-input { min-width: 130px; cursor: pointer; }
+input[type="date"].control-input { min-width: 160px; }
+
+.control-btn-group { justify-content: flex-end; }
+.btn-primary {
+  height: 38px;
+  padding: 0 28px;
+  background: var(--clr-accent);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: var(--font-jp);
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover  { background: #0a7a8a; }
+.btn-primary:active { transform: scale(0.97); }
+
+.controls-note {
+  font-size: 0.78rem;
+  color: var(--clr-text-sub);
+  margin-top: 8px;
+}
+
+/* ── 警告バナー ─────────────────────────────────────────── */
+.alert {
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  font-size: 0.90rem;
+  line-height: 1.7;
+}
+.alert-warning {
+  background: #fff9e6;
+  border: 1px solid #f0c040;
+  color: #7a5800;
+}
+.alert code {
+  background: rgba(0,0,0,0.07);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.88em;
+}
+
+/* ── 結果タイトル ───────────────────────────────────────── */
+.result-header { margin-bottom: 12px; }
+.result-title  {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  border-left: 4px solid var(--clr-accent);
+  padding-left: 10px;
+}
+
+/* ── カード ─────────────────────────────────────────────── */
+.card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--clr-border);
+}
+.card-note {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--clr-text-sub);
+  margin-left: 6px;
+}
+
+/* ── グラフ ─────────────────────────────────────────────── */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px;
+}
+.chart-note {
+  font-size: 0.78rem;
+  color: var(--clr-text-sub);
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* ── テーブルレイアウト ──────────────────────────────────── */
+.tables-layout {
+  display: grid;
+  grid-template-columns: 1fr 290px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .tables-layout { grid-template-columns: 1fr; }
+}
+
+/* ── テーブル共通 ─────────────────────────────────────────── */
+.table-card  { overflow: hidden; }
+.table-scroll { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.data-table th {
+  background: var(--clr-primary);
+  color: #fff;
+  font-weight: 600;
+  padding: 7px 10px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.data-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--clr-border);
+  text-align: center;
+  vertical-align: middle;
+}
+.data-table tbody tr:nth-child(even) { background: #f7fafc; }
+.data-table tbody tr:hover           { background: #eaf4ff; cursor: pointer; }
+
+/* 選択行ハイライト */
+.data-table tbody tr.selected-row {
+  background: var(--clr-selected) !important;
+  font-weight: 600;
+  border-left: 3px solid var(--clr-selected-b);
+}
+.data-table tbody tr.selected-row td:first-child {
+  color: var(--clr-primary);
+}
+
+/* 満潮・干潮セル色 */
+.tide-high { color: var(--clr-high); font-weight: 600; }
+.tide-low  { color: var(--clr-low);  font-weight: 600; }
+.tide-none { color: #b0b8c4; }
+
+/* 時間別詳細テーブル */
+.detail-card { min-width: 270px; }
+.detail-table-inner { font-size: 0.88rem; }
+.detail-table-inner th,
+.detail-table-inner td { padding: 6px 8px; }
+.detail-table-inner td:nth-child(2) { font-weight: 600; text-align: right; padding-right: 14px; }
+
+/* ── フッター ───────────────────────────────────────────── */
+.app-footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 0.78rem;
+  color: var(--clr-text-sub);
+  border-top: 1px solid var(--clr-border);
+  margin-top: 20px;
+}

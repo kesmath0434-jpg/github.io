@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>潮汐データ</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js 4.x -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- 日時スケール用アダプタ -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <!-- 注釈プラグイン（選択日ハイライト用） -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+
+  <!-- ▼ 変換済み潮汐データ（convert.py で生成） ▼ -->
+  <script src="data/2026/00_minamata.js"></script>
+  <script src="data/2026/01_akune.js"></script>
+  <script src="data/2026/02_kagoshima.js"></script>
+  <script src="data/2026/03_makurazaki.js"></script>
+  <script src="data/2026/04_shibushi.js"></script>
+  <script src="data/2026/05_oodomari.js"></script>
+  <script src="data/2026/06_nishinoomote.js"></script>
+  <script src="data/2026/07_tanegashima.js"></script>
+  <script src="data/2026/08_nakanoshima.js"></script>
+  <script src="data/2026/09_naze.js"></script>
+  <script src="data/2026/10_amami.js"></script>
+
+  <script src="data/2027/00_minamata.js"></script>
+  <script src="data/2027/01_akune.js"></script>
+  <script src="data/2027/02_kagoshima.js"></script>
+  <script src="data/2027/03_makurazaki.js"></script>
+  <script src="data/2027/04_shibushi.js"></script>
+  <script src="data/2027/05_oodomari.js"></script>
+  <script src="data/2027/06_nishinoomote.js"></script>
+  <script src="data/2027/07_tanegashima.js"></script>
+  <script src="data/2027/08_nakanoshima.js"></script>
+  <script src="data/2027/09_naze.js"></script>
+  <script src="data/2027/10_amami.js"></script>
+  <!-- ▲ 潮汐データここまで ▲ -->
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="app-header">
+    <div class="header-inner">
+      <h1 class="app-title">🌊 潮汐データ</h1>
+      <p class="app-subtitle">気象庁観測データ</p>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- 操作パネル -->
+    <section class="controls-panel">
+      <div class="controls-inner">
+        <div class="control-group">
+          <label for="station-select" class="control-label">観測地点</label>
+          <select id="station-select" class="control-input"></select>
+        </div>
+        <div class="control-group">
+          <label for="date-input" class="control-label">基準日</label>
+          <input type="date" id="date-input" class="control-input"
+                 min="2026-01-01" max="2027-12-31">
+        </div>
+        <div class="control-group control-btn-group">
+          <button id="submit-btn" class="btn-primary">確　定</button>
+        </div>
+      </div>
+      <p class="controls-note">※ 基準日の前後 15 日（最大 31 日間）のデータを表示します。</p>
+    </section>
+
+    <!-- データ未ロード警告 -->
+    <div id="data-warning" class="alert alert-warning" style="display:none">
+      ⚠ データファイルが読み込めません。<br>
+      先に <code>converter/convert_all.bat</code> を実行して変換データを生成してください。
+    </div>
+
+    <!-- 結果エリア（初期非表示） -->
+    <section id="results" style="display:none">
+
+      <!-- 結果タイトル -->
+      <div class="result-header">
+        <h2 id="result-title" class="result-title"></h2>
+      </div>
+
+      <!-- グラフ -->
+      <div class="card">
+        <h3 class="card-title">潮位グラフ（毎時）</h3>
+        <div class="chart-wrapper">
+          <canvas id="tide-chart"></canvas>
+        </div>
+        <p class="chart-note">黄色背景：選択日　▲ 満潮　▽ 干潮</p>
+      </div>
+
+      <!-- テーブルエリア（左：日別サマリー、右：時間別詳細） -->
+      <div class="tables-layout">
+
+        <!-- 日別サマリーテーブル -->
+        <div class="card table-card">
+          <h3 class="card-title">日別サマリー
+            <span class="card-note">（行をクリックで時間別表示）</span>
+          </h3>
+          <div class="table-scroll">
+            <table id="summary-table" class="data-table">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>最高<br>潮位</th>
+                  <th>最低<br>潮位</th>
+                  <th>満潮（時刻・潮位）</th>
+                  <th>干潮（時刻・潮位）</th>
+                </tr>
+              </thead>
+              <tbody id="summary-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 時間別詳細テーブル -->
+        <div class="card table-card detail-card">
+          <h3 class="card-title" id="detail-title">時間別潮位</h3>
+          <div class="table-scroll">
+            <table id="detail-table" class="data-table detail-table-inner">
+              <thead>
+                <tr>
+                  <th>時刻</th>
+                  <th>潮位 (cm)</th>
+                  <th>満・干</th>
+                </tr>
+              </thead>
+              <tbody id="detail-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /.tables-layout -->
+
+    </section><!-- /#results -->
+
+  </main>
+
+  <footer class="app-footer">
+    <p>出典：気象庁 潮汐観測データ ／ 単位：cm（潮位表基準面表示）</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
